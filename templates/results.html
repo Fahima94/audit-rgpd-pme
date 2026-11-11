@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}Résultats Audit RGPD — {{ company }}{% endblock %}
+{% block content %}
+
+{% set score_class = "score-green" if global_score >= 75 else ("score-orange" if global_score >= 50 else "score-red") %}
+{% set score_label = "Conforme" if global_score >= 75 else ("Partiellement conforme" if global_score >= 50 else "Non conforme") %}
+{% set score_msg = "Votre entreprise présente un bon niveau de conformité RGPD. Maintenez vos efforts et restez vigilant sur les points d'amélioration identifiés." if global_score >= 75 else ("Des lacunes significatives ont été identifiées. Un plan d'action structuré est recommandé pour renforcer votre conformité." if global_score >= 50 else "Des non-conformités majeures ont été détectées. Une mise en conformité urgente est nécessaire pour éviter des risques réglementaires.") %}
+
+<div class="results-page">
+
+  <!-- Score hero -->
+  <div class="results-hero {{ score_class }}-bg">
+    <div class="results-hero-inner">
+      <div class="results-company">{{ company }}</div>
+      <h1>Votre rapport d'audit RGPD</h1>
+
+      <div class="score-display">
+        <div class="score-circle {{ score_class }}">
+          <svg viewBox="0 0 120 120" class="score-svg">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="10"/>
+            <circle cx="60" cy="60" r="52" fill="none" stroke="currentColor" stroke-width="10"
+                    stroke-dasharray="{{ (global_score / 100 * 326.56) | round(1) }} 326.56"
+                    stroke-dashoffset="81.64" stroke-linecap="round"/>
+          </svg>
+          <div class="score-number">{{ global_score }}<span class="score-pct">%</span></div>
+        </div>
+        <div class="score-info">
+          <div class="score-badge {{ score_class }}">{{ score_label }}</div>
+          <p class="score-msg">{{ score_msg }}</p>
+          <div class="score-meta">{{ answered }} / {{ total_questions }} questions répondues</div>
+        </div>
+      </div>
+
+      <div class="results-actions">
+        <a href="{{ url_for('export_pdf') }}" class="btn-primary">📄 Télécharger le rapport PDF</a>
+        <a href="{{ url_for('restart') }}" class="btn-secondary">🔄 Nouvel audit</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="results-body container">
+
+    <!-- Category scores -->
+    <section class="results-section">
+      <h2 class="section-title-left">Résultats par domaine</h2>
+      <div class="cat-results-grid">
+        {% for cat in category_scores %}
+        {% set cs = "green" if cat.score >= 75 else ("orange" if cat.score >= 50 else "red") %}
+        <div class="cat-result-card">
+          <div class="cat-result-header">
+            <span class="cat-result-icon">{{ cat.icon }}</span>
+            <div class="cat-result-info">
+              <div class="cat-result-label">{{ cat.label }}</div>
+              <div class="cat-result-score score-{{ cs }}">{{ cat.score }}%</div>
+            </div>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill progress-{{ cs }}" style="width: {{ cat.score }}%"></div>
+          </div>
+          <div class="cat-status status-{{ cs }}">
+            {% if cs == "green" %}✅ Conforme{% elif cs == "orange" %}⚠️ Partiellement conforme{% else %}🔴 Non conforme{% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- Action plan -->
+    {% if action_plan %}
+    <section class="results-section">
+      <h2 class="section-title-left">Plan d'action prioritaire</h2>
+      <p class="section-desc">{{ action_plan | length }} point(s) d'amélioration identifié(s), classés par priorité.</p>
+
+      <div class="action-filters">
+        <button class="filter-btn active" data-filter="all">Tous ({{ action_plan | length }})</button>
+        <button class="filter-btn" data-filter="haute">
+          🔴 Haute ({{ action_plan | selectattr('priority', 'eq', 'haute') | list | length }})
+        </button>
+        <button class="filter-btn" data-filter="moyenne">
+          🟠 Moyenne ({{ action_plan | selectattr('priority', 'eq', 'moyenne') | list | length }})
+        </button>
+      </div>
+
+      <div class="action-list">
+        {% for action in action_plan %}
+        {% set prio_class = "prio-red" if action.priority == "haute" else ("prio-orange" if action.priority == "moyenne" else "prio-green") %}
+        {% set prio_label = "⚡ Priorité haute" if action.priority == "haute" else ("⚠️ Priorité moyenne" if action.priority == "moyenne" else "✅ Priorité faible") %}
+        <div class="action-card" data-priority="{{ action.priority }}">
+          <div class="action-header">
+            <div class="action-cat">{{ action.category_icon }} {{ action.category }}</div>
+            <span class="prio-badge {{ prio_class }}">{{ prio_label }}</span>
+          </div>
+          <div class="action-question">{{ action.question }}</div>
+          <div class="action-rec">
+            <span class="rec-label">💡 Recommandation</span>
+            {{ action.recommendation }}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% else %}
+    <section class="results-section">
+      <div class="all-good-card">
+        <div class="all-good-icon">🏆</div>
+        <h3>Excellent ! Aucune non-conformité majeure détectée.</h3>
+        <p>Maintenez votre niveau de conformité avec des audits réguliers et une veille réglementaire continue.</p>
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- CTA Services -->
+    <section class="results-section">
+      <div class="cta-services-card">
+        <div class="cta-services-left">
+          <div class="cta-tag">🚀 Accompagnement IA & Automatisation</div>
+          <h2>Passez à l'action avec Fahima B.</h2>
+          <p>Cheffe Projet IA & No-Code — je vous accompagne pour transformer cet audit en conformité réelle, grâce à l'automatisation et aux outils IA.</p>
+          <ul class="cta-services-list">
+            <li>✅ <strong>Audit approfondi</strong> — analyse complète de vos traitements et processus</li>
+            <li>✅ <strong>Rédaction des documents obligatoires</strong> — registre, politique, mentions légales, DPA</li>
+            <li>✅ <strong>Automatisation RGPD</strong> — workflows Make/Airtable, purge auto, alertes</li>
+            <li>✅ <strong>Formation de vos équipes</strong> — sensibilisation et bonnes pratiques IA</li>
+            <li>✅ <strong>Suivi & veille réglementaire</strong> — restez conformes dans la durée</li>
+          </ul>
+          <div class="cta-contact-row">
+            <a href="https://www.linkedin.com/in/fahima-be/" target="_blank" rel="noopener" class="btn-primary">💼 Me contacter sur LinkedIn</a>
+            <a href="https://calendly.com/horizonsdatas/30min" target="_blank" rel="noopener" class="btn-secondary-dark">📅 Prendre RDV sur Calendly</a>
+          </div>
+        </div>
+        <div class="cta-services-right">
+          <div class="cta-stat-box">
+            <div class="cta-stat">83%</div>
+            <div class="cta-stat-label">des PME ne sont pas pleinement conformes au RGPD</div>
+          </div>
+          <div class="cta-stat-box">
+            <div class="cta-stat">20M€</div>
+            <div class="cta-stat-label">d'amende maximale ou 4% du CA mondial</div>
+          </div>
+          <div class="cta-stat-box">
+            <div class="cta-stat">72h</div>
+            <div class="cta-stat-label">pour notifier la CNIL en cas de violation de données</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Export & restart -->
+    <div class="results-footer-actions">
+      <a href="{{ url_for('export_pdf') }}" class="btn-primary btn-lg">📄 Télécharger le rapport PDF complet</a>
+      <a href="{{ url_for('restart') }}" class="btn-outline">🔄 Recommencer l'audit</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Filter action plan
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    document.querySelectorAll('.action-card').forEach(card => {
+      card.style.display = (filter === 'all' || card.dataset.priority === filter) ? 'block' : 'none';
+    });
+  });
+});
+</script>
+{% endblock %}

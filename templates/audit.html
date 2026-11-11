@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Questionnaire Audit RGPD{% endblock %}
+{% block content %}
+
+<div class="audit-page">
+  <div class="audit-header">
+    <h1>Questionnaire d'audit RGPD</h1>
+    <p>Répondez honnêtement à chaque question pour obtenir un diagnostic précis de votre conformité.</p>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress-wrap">
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
+    </div>
+    <span class="progress-label" id="progressLabel">0 / {{ questions_by_cat.values() | sum(attribute='questions') | list | length }} questions répondues</span>
+  </div>
+
+  <form method="POST" action="{{ url_for('audit') }}" id="auditForm">
+    <!-- Company name -->
+    <div class="company-block">
+      <label for="company_name">Nom de votre entreprise</label>
+      <input type="text" id="company_name" name="company_name" placeholder="Ex : Dupont & Associés SAS" required maxlength="100">
+    </div>
+
+    <!-- Categories -->
+    {% for cat in categories %}
+    {% set cat_data = questions_by_cat[cat.id] %}
+    <div class="cat-section" id="cat-{{ cat.id }}">
+      <div class="cat-header">
+        <span class="cat-icon">{{ cat.icon }}</span>
+        <div>
+          <h2>{{ cat.label }}</h2>
+          <span class="cat-count">{{ cat_data.questions | length }} questions</span>
+        </div>
+        <div class="cat-score-badge" id="badge-{{ cat.id }}">—</div>
+      </div>
+
+      <div class="questions-list">
+        {% for q in cat_data.questions %}
+        <div class="question-card" id="qcard-{{ q.id }}" data-qid="{{ q.id }}" data-cat="{{ cat.id }}">
+          <p class="question-text">
+            <span class="q-num">Q{{ loop.index }}</span>
+            {{ q.text }}
+          </p>
+          <div class="options-group">
+            {% for opt in q.options %}
+            <label class="option-label" for="{{ q.id }}_{{ loop.index }}">
+              <input type="radio" name="{{ q.id }}" id="{{ q.id }}_{{ loop.index }}"
+                     value="{{ opt.value }}" data-qid="{{ q.id }}" data-cat="{{ cat.id }}"
+                     class="option-radio" required>
+              <span class="option-text">{{ opt.label }}</span>
+              <span class="option-check">✓</span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="submit-wrap">
+      <div class="submit-hint" id="submitHint">
+        <span id="hintText">Répondez à toutes les questions pour obtenir votre score.</span>
+      </div>
+      <button type="submit" class="btn-primary btn-xl" id="submitBtn" disabled>
+        Voir mes résultats →
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+const TOTAL = {{ questions_by_cat.values() | sum(attribute='questions') | list | length }};
+const catCounts = {};
+{% for cat in categories %}
+catCounts["{{ cat.id }}"] = {{ questions_by_cat[cat.id].questions | length }};
+{% endfor %}
+</script>
+{% endblock %}

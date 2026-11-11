@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Audit RGPD PME — Évaluez votre conformité{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🇪🇺 Règlement Général sur la Protection des Données</div>
+    <h1 class="hero-title">Évaluez votre conformité <span class="highlight">RGPD</span> en 10 minutes</h1>
+    <p class="hero-sub">Un audit structuré en 7 domaines clés, un score de conformité personnalisé, un plan d'action concret et un rapport PDF exportable — spécialement conçu pour les PME.</p>
+    <a href="{{ url_for('audit') }}" class="btn-primary btn-xl">
+      Démarrer l'audit gratuit →
+    </a>
+    <p class="hero-hint">22 questions · Résultats instantanés · 100% confidentiel</p>
+    <div class="hero-author">
+      <span class="hero-author-label">Un outil conçu par</span>
+      <a href="https://www.linkedin.com/in/fahima-be/" target="_blank" rel="noopener" class="hero-author-name">
+        <span class="author-dot"></span>Fahima B. — Cheffe Projet IA & Automatisation
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="container">
+    <h2 class="section-title">Ce que vous obtenez</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3>Audit en 7 domaines</h3>
+        <p>Gouvernance, registre des traitements, bases légales, droits des personnes, sécurité, sous-traitants, violations.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Score de conformité</h3>
+        <p>Un score global pondéré et un score par domaine pour identifier précisément vos points faibles.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗺️</div>
+        <h3>Plan d'action priorisé</h3>
+        <p>Des recommandations concrètes classées par priorité pour corriger rapidement les non-conformités critiques.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📄</div>
+        <h3>Rapport PDF exportable</h3>
+        <p>Un rapport complet prêt à partager avec votre direction, vos équipes ou votre conseil juridique.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="domains">
+  <div class="container">
+    <h2 class="section-title">Les 7 domaines évalués</h2>
+    <div class="domains-grid">
+      <div class="domain-pill">🏛️ Gouvernance & Organisation</div>
+      <div class="domain-pill">📋 Registre des traitements</div>
+      <div class="domain-pill">⚖️ Bases légales</div>
+      <div class="domain-pill">🙋 Droits des personnes</div>
+      <div class="domain-pill">🔒 Sécurité des données</div>
+      <div class="domain-pill">🤝 Sous-traitants & Transferts</div>
+      <div class="domain-pill">🚨 Violations de données</div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-card">
+      <h2>Prêt à connaître votre niveau de conformité ?</h2>
+      <p>L'audit prend moins de 10 minutes. Vos réponses restent confidentielles et ne sont pas stockées.</p>
+      <a href="{{ url_for('audit') }}" class="btn-primary">Lancer l'audit maintenant →</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

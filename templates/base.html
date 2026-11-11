@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Audit RGPD PME — par Fahima B.{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="{{ url_for('index') }}" class="logo">
+        <span class="logo-icon">🔐</span>
+        <span class="logo-text">RGPD<span class="logo-accent">Audit</span></span>
+        <span class="logo-by">by Fahima B.</span>
+      </a>
+      <div class="nav-links">
+        <a href="https://www.linkedin.com/in/fahima-be/" target="_blank" rel="noopener" class="nav-linkedin">LinkedIn</a>
+        <a href="{{ url_for('audit') }}" class="btn-nav">Démarrer l'audit</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-brand">
+        Construit par <a href="https://www.linkedin.com/in/fahima-be/" target="_blank" rel="noopener"><strong>Fahima B.</strong></a>
+        — Cheffe Projet IA & No-Code &nbsp;|&nbsp; Formation OREEGAMI
+      </p>
+      <p class="footer-note">Ce rapport est fourni à titre informatif et ne constitue pas un avis juridique.</p>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/audit.js') }}"></script>
+</body>
+</html>
