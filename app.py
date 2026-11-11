@@ -4,7 +4,11 @@ from pdf_report import generate_pdf
 import json, os
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+# En production (Cloud Run), SECRET_KEY est fournie par l'environnement :
+# une clé fixe garde les sessions valides d'une instance à l'autre.
+app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
+app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Lax",
+                  SESSION_COOKIE_SECURE=os.environ.get("K_SERVICE") is not None)
 
 
 def compute_scores(answers: dict):
@@ -86,7 +90,7 @@ def audit():
             "questions": [q for q in QUESTIONS if q["category"] == c["id"]],
         }
 
-    return render_template("audit.html", categories=CATEGORIES, questions_by_cat=questions_by_cat)
+    return render_template("audit.html", categories=CATEGORIES, questions_by_cat=questions_by_cat, total_questions=len(QUESTIONS))
 
 
 @app.route("/results")

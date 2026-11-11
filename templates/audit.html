@@ -13,7 +13,7 @@
     <div class="progress-bar-outer">
       <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
     </div>
-    <span class="progress-label" id="progressLabel">0 / {{ questions_by_cat.values() | sum(attribute='questions') | list | length }} questions répondues</span>
+    <span class="progress-label" id="progressLabel">0 / {{ total_questions }} questions répondues</span>
   </div>
 
   <form method="POST" action="{{ url_for('audit') }}" id="auditForm">
@@ -72,7 +72,7 @@
 </div>
 
 <script>
-const TOTAL = {{ questions_by_cat.values() | sum(attribute='questions') | list | length }};
+const TOTAL = {{ total_questions }};
 const catCounts = {};
 {% for cat in categories %}
 catCounts["{{ cat.id }}"] = {{ questions_by_cat[cat.id].questions | length }};

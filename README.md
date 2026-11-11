@@ -50,10 +50,21 @@ pip install -r requirements.txt
 python app.py            # http://localhost:5000
 ```
 
+## ☁️ Déployer sur Google Cloud Run
+
+L'app est prête pour la production : `Dockerfile`, serveur `gunicorn`, cookies de session sécurisés.
+
+1. Console Google Cloud → **Cloud Run** → **Déployer un conteneur** → **Déployer en continu depuis un dépôt**
+2. Relier ce dépôt GitHub, branche `main`, type de compilation **Dockerfile**
+3. Région `europe-west9` (Paris) · **Autoriser les appels non authentifiés**
+4. Variable d'environnement `SECRET_KEY` : une longue chaîne aléatoire
+5. Chaque `git push` sur `main` redéploie automatiquement
+
 ## 🗂️ Structure
 
 ```
 app.py          → routes Flask + calcul des scores pondérés
+Dockerfile      → image de production (gunicorn) pour Cloud Run
 questions.py    → référentiel : 7 domaines, 22 questions, recommandations
 pdf_report.py   → génération du rapport PDF (ReportLab)
 templates/      → accueil, questionnaire, résultats
@@ -62,7 +73,6 @@ static/         → styles et progression du questionnaire
 
 ## 🧭 Pistes d'évolution
 
-- Déploiement cloud (GCP) pour un accès en ligne
 - Volet **AI Act** pour les PME qui utilisent de l'IA
 - Mode « consultant » : suivi de plusieurs clients et comparaison dans le temps
 
