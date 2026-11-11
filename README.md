@@ -4,6 +4,9 @@
 ![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)
 ![ReportLab](https://img.shields.io/badge/PDF-ReportLab-E74C3C?style=flat-square)
 ![Claude Code](https://img.shields.io/badge/Construit_avec-Claude_Code-D97757?style=flat-square&logo=anthropic&logoColor=white)
+![Cloud Run](https://img.shields.io/badge/Déployé_sur-Google_Cloud_Run-4285F4?style=flat-square&logo=googlecloud&logoColor=white)
+
+[![Démo en ligne](https://img.shields.io/badge/▶_Démo_en_ligne-Faire_l'audit-1A6DB5?style=for-the-badge)](https://audit-rgpd-pme-964649796936.europe-west9.run.app)
 
 > **Le problème :** une PME sait qu'elle « doit faire du RGPD », mais ne sait ni où elle en est ni par quoi commencer. Un audit par un cabinet coûte cher, et un PDF de la CNIL ne dit pas *quoi faire lundi matin*.
 > **La solution :** 22 questions, 10 minutes, un score par domaine et un **plan d'action priorisé**, exportable en PDF.
@@ -50,7 +53,9 @@ pip install -r requirements.txt
 python app.py            # http://localhost:5000
 ```
 
-## ☁️ Déployer sur Google Cloud Run
+## ☁️ Déploiement
+
+En ligne sur **Google Cloud Run** (région Paris) : https://audit-rgpd-pme-964649796936.europe-west9.run.app
 
 L'app est prête pour la production : `Dockerfile`, serveur `gunicorn`, cookies de session sécurisés.
 
